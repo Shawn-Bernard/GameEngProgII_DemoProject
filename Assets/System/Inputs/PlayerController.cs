@@ -5,8 +5,19 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    
-    private InputManager InputManager =>  GameManager.instance.InputManager;
+    public enum MovementState
+    {
+        Idle,
+        Walking,
+        Sprinting,
+        Crouching,
+        Jumping,
+        Falling
+    }
+
+    public MovementState currentMovementState;
+
+    private InputManager InputManager => GameManager.instance.InputManager;
 
     private Rigidbody rb => characterController.attachedRigidbody;
     CharacterController characterController => GetComponent<CharacterController>();
@@ -36,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Mouse Sensivivity")]
     public float MouseSensivivity = 05f;
-    
+
 
     [Header("Move & Look locks")]
     private float lowerLookLimit = -60;
@@ -47,6 +58,7 @@ public class PlayerController : MonoBehaviour
     public GameObject cameraRoot;
 
     [Header("Crouch Settings")]
+    [SerializeField] private float crouchSpeed = 2.0f;
     private float standingHeight;
     private Vector3 standingCenter;
     private float standingCamY;
@@ -61,7 +73,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 targetCenter;
     private float targetCamY; // Target Y position for camera root during crouch transition
 
-
+    private int playerLayerMask;
 
     [Header("Jump & gravity settings")]
     [SerializeField] private bool isGrounded;
@@ -77,6 +89,11 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        playerLayerMask = ~LayerMask.GetMask("Player");
+
+        #region Initialize Default values
+
+        currentMovementState = MovementState.Idle;
         // Initialize crouch variables
         standingHeight = characterController.height;
         standingCenter = characterController.center;
@@ -85,6 +102,11 @@ public class PlayerController : MonoBehaviour
         targetHeight = standingHeight;
         targetCenter = standingCenter;
         targetCamY = cameraRoot.transform.localPosition.y;
+
+        crouchEnabled = false;
+        SprintEnabled = false;
+
+        #endregion
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -95,27 +117,95 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleMovement();
+        //HandleMovement();
     }
 
     private void LateUpdate()
     {
-        HandleLook();
+        //HandleLook();
     }
 
     public void HandleMovement()
     {
 
-         //if (!canMove) return;
+        //if (!canMove) return;
+        DetermineMovementState();
 
+        // Ground check
         GroundedCheck();
+
+
+        // Handle crouch
         HandleCrouch();
+
+
+        ApplyMovement();
+        
+    }
+
+    private void DetermineMovementState()
+    {
+        // if the player is not grounded they are either jumping or falling 
+        if (isGrounded == false)
+        {
+            if (velocity.y > 0.1f)
+            {
+                currentMovementState = MovementState.Jumping;
+            }
+            else if (velocity.y < 0)
+            {
+                currentMovementState = MovementState.Falling;
+            }
+        }
+        else if (isGrounded == true)
+        {
+            if (crouchEnabled == true || isObstructed == true)
+            {
+                currentMovementState = MovementState.Crouching;
+            }
+            else if (SprintEnabled == true && currentMovementState != MovementState.Crouching)
+            {
+                currentMovementState = MovementState.Sprinting;
+            }
+            else if (moveInput.magnitude > 0.1f && SprintEnabled == false && crouchEnabled == false)
+            {
+                currentMovementState = MovementState.Walking;
+            }
+            else if (moveInput.magnitude <= 0.1f && SprintEnabled == false && crouchEnabled == false)
+            {
+                currentMovementState = MovementState.Idle;
+            }
+
+        }
+    }
+
+    private void ApplyMovement()
+    {
         //Step 1 Getting input direction
         Vector3 moveInputDirection = new Vector3(moveInput.x, 0, moveInput.y);
         Vector3 worldMoveDirection = transform.TransformDirection(moveInputDirection);
 
         //Step 2 determine move speed
         float targetSpeed = walkSpeed;
+
+        switch (currentMovementState)
+        {
+            case MovementState.Crouching:
+                {
+                    targetSpeed = crouchSpeed;
+                    break;
+                }
+            case MovementState.Sprinting:
+                {
+                    targetSpeed = sprintSpeed;
+                    break;
+                }
+            default:
+                {
+                    targetSpeed = walkSpeed;
+                    break;
+                }
+        }
 
         if (SprintEnabled)
         {
@@ -140,10 +230,9 @@ public class PlayerController : MonoBehaviour
 
         Vector3 movement = horizontalMoveDirection;
         movement.y = velocity.y;
-         // Step 7 apply fianl movement
+        // Step 7 apply fianl movement
         characterController.Move(movement * Time.deltaTime);
     }
-
     public void HandleLook()
     {
         float LookX = lookInput.x * MouseSensivivity * Time.deltaTime;
@@ -202,6 +291,7 @@ public class PlayerController : MonoBehaviour
     private void HandleCrouch()
     {
 
+
         bool shouldCrouch = crouchInput == true;
 
         // if airborne and was crouching, maintain crouch state (prevents standing up from crouch while walking off a ledge)
@@ -224,7 +314,7 @@ public class PlayerController : MonoBehaviour
         {
             // float maxAllowedHeight = GetMaxAllowedHeight();
 
-            float maxAllowedHeight = 3.0f;
+            float maxAllowedHeight = GetMaxHeight();
 
             if (maxAllowedHeight >= standingHeight - 0.05f)
             {
@@ -261,6 +351,24 @@ public class PlayerController : MonoBehaviour
     private void GroundedCheck()
     {
         isGrounded = characterController.isGrounded;
+    }
+
+    private float GetMaxHeight()
+    {
+        RaycastHit raycastHit;
+        float maxCheckDistance = standingHeight + 0.15f;
+
+        if (Physics.Raycast(transform.position,cameraRoot.transform.up,out raycastHit, maxCheckDistance, playerLayerMask))
+        {
+            float maxHeight = raycastHit.distance - 01f;
+
+            maxHeight = Mathf.Max(maxHeight, crouchingHeight);
+
+            return maxHeight;
+        }
+
+        return standingHeight;
+
     }
 
     public void MovePlayerToSpawn(Transform spawnPoint)
