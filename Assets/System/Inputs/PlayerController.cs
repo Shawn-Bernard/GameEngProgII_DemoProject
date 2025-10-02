@@ -135,6 +135,7 @@ public class PlayerController : MonoBehaviour
         GroundedCheck();
 
 
+
         // Handle crouch
         HandleCrouch();
 
@@ -348,7 +349,7 @@ public class PlayerController : MonoBehaviour
         cameraRoot.transform.localPosition = new Vector3(currentCamPos.x, Mathf.Lerp(currentCamPos.y, targetCamY, lerpSpeed), currentCamPos.z);
 
     }
-    private void GroundedCheck()
+    public void GroundedCheck()
     {
         isGrounded = characterController.isGrounded;
     }

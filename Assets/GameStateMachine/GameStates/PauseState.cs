@@ -1,38 +1,40 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameplayState : IState
+public class PauseState : IState
 {
     #region Singleton Instance
 
     public static GameManager gameManager => GameManager.instance;
 
-    private static readonly GameplayState instance = new GameplayState();
+    private static readonly PauseState instance = new PauseState();
 
-    public static GameplayState Instance = instance;
+    public static PauseState Instance = instance;
 
     #endregion
-    public void EnterState() 
+    public void EnterState()
     {
-        Time.timeScale = 1;
+        //Time.timeScale = 0;
+        gameManager.UIManager.EnablePauseMenu();
+    }
 
-        Debug.Log("Entered gameplay state");
+    public void ExitState()
+    {
 
-        gameManager.UIManager.EnableGameplayMenu();
-
-        Cursor.visible = false;
-
-        //gameManager.PlayerController.GroundedCheck();
     }
 
     public void FixedUpdateState()
     {
-        
+
+    }
+
+    public void LateUpdateState()
+    {
+
     }
 
     public void UpdateState()
     {
-        GameManager.instance.PlayerController.HandleMovement();
         if (Keyboard.current[Key.Digit1].wasPressedThisFrame)
         {
             Debug.Log("Switched to main menu state");
@@ -50,14 +52,4 @@ public class GameplayState : IState
         }
     }
 
-    public void LateUpdateState()
-    {
-        GameManager.instance.PlayerController.HandleLook();
-    }
-
-    public void ExitState()
-    {
-        Cursor.visible = true;
-        Time.timeScale = 0;
-    }
 }
