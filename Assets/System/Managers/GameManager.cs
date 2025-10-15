@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameStateManager gameStateManager;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private LevelManager levelManager;
 
     public InputManager InputManager => inputManager;
 
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     public PlayerController PlayerController => playerController;
 
     public UIManager UIManager => uiManager;
+
+    public LevelManager LevelManager => levelManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -29,6 +32,7 @@ public class GameManager : MonoBehaviour
         gameStateManager ??= GetComponentInChildren<GameStateManager>();
         playerController ??= GetComponentInChildren<PlayerController>();
         uiManager ??= GetComponentInChildren<UIManager>();
+        levelManager ??= GetComponentInChildren<LevelManager>();
 
         if (instance == null)
         {

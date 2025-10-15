@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -6,8 +7,10 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private string LastActiveState;
     [SerializeField] private string currentActiveState;
 
-    private IState currentState;
-    private IState lastState;
+    [SerializeField] private IState currentState;
+    [SerializeField] private IState lastState;
+
+    GameManager gameManager => GameManager.instance;
     #region game states
     // Instantiate game states
     public MainMenuState mainMenuState = MainMenuState.Instance;
@@ -45,13 +48,12 @@ public class GameStateManager : MonoBehaviour
         LastActiveState = currentState.ToString();
 
         currentState?.ExitState();
-        
+
 
         currentState = newState;
         currentActiveState = currentState.ToString();
 
         currentState.EnterState();
-        
     }
 
     #region Button Call Methods
@@ -59,6 +61,7 @@ public class GameStateManager : MonoBehaviour
     public void StartGame()
     {
         SwitchStates(gameplayState);
+        gameManager.LevelManager.LoadSceneWithSpawnPoint("Level1", "SpawnPoint");
     }
     public void Pause()
     {

@@ -35,21 +35,7 @@ public class PauseState : IState
 
     public void UpdateState()
     {
-        if (Keyboard.current[Key.Digit1].wasPressedThisFrame)
-        {
-            Debug.Log("Switched to main menu state");
-            GameManager.instance.GameStateManager.SwitchStates(new MainMenuState());
-        }
-        if (Keyboard.current[Key.Digit2].wasPressedThisFrame)
-        {
-            Debug.Log("Switched to gameplay state");
-            GameManager.instance.GameStateManager.SwitchStates(new GameplayState());
-        }
-        if (Keyboard.current[Key.Digit3].wasPressedThisFrame)
-        {
-            Debug.Log("Switched to pause state");
-            GameManager.instance.GameStateManager.SwitchStates(new PauseState());
-        }
+
     }
 
 }
