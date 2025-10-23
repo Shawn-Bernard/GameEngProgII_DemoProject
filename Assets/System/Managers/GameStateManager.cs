@@ -22,8 +22,10 @@ public class GameStateManager : MonoBehaviour
     #region State Machine Updates
     private void Start()
     {
+        LastActiveState = currentActiveState;
         currentState = mainMenuState;
         currentState.EnterState();
+        currentActiveState = currentState.ToString();
     }
     private void FixedUpdate()
     {

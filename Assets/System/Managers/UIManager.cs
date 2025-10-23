@@ -2,46 +2,75 @@ using UnityEngine;
 using UnityEngine.UIElements;
 public class UIManager : MonoBehaviour
 {
-
-    public GameObject pauseMenuUI;
-    public GameObject gameplayMenuUI;
-    public GameObject mainMenuUI;
-    public GameObject gameOverMenuUI;
-
+    [Header("UI Menu Objects")]
+    [SerializeField] private UIDocument[] uiMenu;
+    [SerializeField] private UIDocument mainMenuUI;
+    [SerializeField] private UIDocument gameplayMenuUI;
+    [SerializeField] private UIDocument pauseMenuUI;
+    //[SerializeField] private UIDocument gameOverMenuUI;
     private void Awake()
+    {
+        mainMenuUI = FindUIDocument("MainMenu");
+        gameplayMenuUI = FindUIDocument("GameplayMenu");
+        pauseMenuUI = FindUIDocument("PauseMenu");
+        //DisableAllMenus();
+
+    }
+
+    private void Start()
     {
         DisableAllMenus();
     }
 
     public void DisableAllMenus()
     {
-        mainMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(false);
-        gameplayMenuUI.SetActive(false);
-        gameOverMenuUI.SetActive(false);
+        if (mainMenuUI != null) mainMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        if (gameplayMenuUI != null) pauseMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        if (pauseMenuUI != null) gameplayMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        //gameOverMenuUI.rootVisualElement.style.display = DisplayStyle.None;
     }
 
     public void EnableMainMenu()
     {
         DisableAllMenus();
-        mainMenuUI.SetActive(true);
+        mainMenuUI.rootVisualElement.style.display = DisplayStyle.Flex;
     }
 
     public void EnablePauseMenu()
     {
         DisableAllMenus();
-        pauseMenuUI.SetActive(true);
+        pauseMenuUI.rootVisualElement.style.display = DisplayStyle.Flex;
     }
 
     public void EnableGameplayMenu()
     {
         DisableAllMenus();
-        gameplayMenuUI.SetActive(true);
+        gameplayMenuUI.rootVisualElement.style.display = DisplayStyle.Flex;
     }
 
     public void EnableGameOverMenu()
     {
         DisableAllMenus();
-        gameOverMenuUI.SetActive(true);
+        //gameOverMenuUI.rootVisualElement.style.display = DisplayStyle.Flex;
+    }
+
+    private UIDocument FindUIDocument(string name)
+    {
+        UIDocument[] documents = Object.FindObjectsByType<UIDocument>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        foreach (var doc in documents)
+        {
+            if (doc.name == name)
+            {
+                Debug.Log($"UI {doc} - {name} was found");
+                return doc;
+            }
+            else
+            {
+                Debug.LogWarning($"UIDocument '{name}' not found in scene.");
+            }
+        }
+        Debug.LogWarning($"UIDocument '{name}' not found in scene.");
+        return null;
     }
 }
