@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -34,6 +33,7 @@ public class InputManager : MonoBehaviour,Inputs.IPlayerActions
     public event Action<InputAction.CallbackContext> JumpInputEvent;
     public event Action<InputAction.CallbackContext> SprintInputEvent;
     public event Action<InputAction.CallbackContext> CrouchInputEvent;
+    public event Action<InputAction.CallbackContext> InteractInputEvent;
 
     #endregion
 
@@ -72,6 +72,11 @@ public class InputManager : MonoBehaviour,Inputs.IPlayerActions
         CrouchInputEvent?.Invoke(context);
     }
 
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        InteractInputEvent?.Invoke(context);
+    }
+
     #endregion
 
 
@@ -90,18 +95,4 @@ public class InputManager : MonoBehaviour,Inputs.IPlayerActions
             inputs.Player.Disable();
         }
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    
 }

@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 public class UIManager : MonoBehaviour
 {
     [Header("UI Menu Objects")]
-    [SerializeField] private UIDocument[] uiMenu;
     [SerializeField] private UIDocument mainMenuUI;
     [SerializeField] private UIDocument gameplayMenuUI;
     [SerializeField] private UIDocument pauseMenuUI;
@@ -13,20 +12,14 @@ public class UIManager : MonoBehaviour
         mainMenuUI = FindUIDocument("MainMenu");
         gameplayMenuUI = FindUIDocument("GameplayMenu");
         pauseMenuUI = FindUIDocument("PauseMenu");
-        //DisableAllMenus();
-
-    }
-
-    private void Start()
-    {
         DisableAllMenus();
     }
 
     public void DisableAllMenus()
     {
-        if (mainMenuUI != null) mainMenuUI.rootVisualElement.style.display = DisplayStyle.None;
-        if (gameplayMenuUI != null) pauseMenuUI.rootVisualElement.style.display = DisplayStyle.None;
-        if (pauseMenuUI != null) gameplayMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        mainMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        pauseMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        gameplayMenuUI.rootVisualElement.style.display = DisplayStyle.None;
         //gameOverMenuUI.rootVisualElement.style.display = DisplayStyle.None;
     }
 

@@ -23,7 +23,7 @@ public class GameStateManager : MonoBehaviour
     private void Start()
     {
         LastActiveState = currentActiveState;
-        currentState = mainMenuState;
+        currentState = gameplayState;
         currentState.EnterState();
         currentActiveState = currentState.ToString();
     }
