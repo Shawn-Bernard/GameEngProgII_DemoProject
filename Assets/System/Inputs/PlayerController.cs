@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb => characterController.attachedRigidbody;
     CharacterController characterController => GetComponent<CharacterController>();
 
-    [Header("Input Vectors")]
+    [Header("Input Vectors (debug)")]
     [SerializeField] private Vector2 moveInput;
 
     [SerializeField] private Vector2 lookInput;
