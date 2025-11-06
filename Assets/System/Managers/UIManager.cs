@@ -5,13 +5,17 @@ public class UIManager : MonoBehaviour
     [Header("UI Menu Objects")]
     [SerializeField] private UIDocument mainMenuUI;
     [SerializeField] private UIDocument gameplayMenuUI;
-    [SerializeField] private UIDocument pauseMenuUI;
+    [SerializeField] private UIDocument pauseMenuUI;'
+    [SerializeField] private UIDocument loadingMenuUI;
     //[SerializeField] private UIDocument gameOverMenuUI;
+
+    public LoadingController loadingController;
     private void Awake()
     {
         mainMenuUI = FindUIDocument("MainMenu");
         gameplayMenuUI = FindUIDocument("GameplayMenu");
         pauseMenuUI = FindUIDocument("PauseMenu");
+        loadingController = FindAnyObjectByType<LoadingController>();
         DisableAllMenus();
     }
 

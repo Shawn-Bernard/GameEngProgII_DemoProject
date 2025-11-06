@@ -17,13 +17,15 @@ public class GameStateManager : MonoBehaviour
     public GameplayState gameplayState = GameplayState.Instance;
     public PauseState pauseState = PauseState.Instance;
     public GameOverState gameoverState = GameOverState.Instance;
+    public BootLoadState bootLoadState = BootLoadState.Instance;
+    public LoadingState loadingState = LoadingState.Instance;
 
     #endregion
     #region State Machine Updates
     private void Start()
     {
         LastActiveState = currentActiveState;
-        currentState = gameplayState;
+        currentState = bootLoadState;
         currentState.EnterState();
         currentActiveState = currentState.ToString();
     }
@@ -91,7 +93,6 @@ public class GameStateManager : MonoBehaviour
         {
             SwitchStates(gameplayState);
         }
-        
     }
     public void MainMenu()
     {

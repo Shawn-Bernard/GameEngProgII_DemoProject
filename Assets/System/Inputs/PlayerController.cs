@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
 
     private InputManager InputManager => GameManager.instance.InputManager;
 
+    private GameStateManager GameStateManager => GameManager.instance.GameStateManager;
+
     private Rigidbody rb => characterController.attachedRigidbody;
     CharacterController characterController => GetComponent<CharacterController>();
 
@@ -107,22 +109,6 @@ public class PlayerController : MonoBehaviour
         SprintEnabled = false;
 
         #endregion
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //HandleMovement();
-    }
-
-    private void LateUpdate()
-    {
-        //HandleLook();
     }
 
     public void HandleMovement()
@@ -418,7 +404,11 @@ public class PlayerController : MonoBehaviour
             crouchInput = !crouchInput;
             Debug.Log("Crouch button hit");
         }
-        
+    }
+
+    private void SetESCInput(InputAction.CallbackContext context)
+    {
+
     }
 
     private void SetSprintInput(InputAction.CallbackContext context)
@@ -446,6 +436,8 @@ public class PlayerController : MonoBehaviour
         InputManager.CrouchInputEvent += SetCrouchInput;
 
         InputManager.SprintInputEvent += SetSprintInput;
+
+        InputManager.ESCInputEvent += SetESCInput;
     }
 
 
@@ -459,5 +451,7 @@ public class PlayerController : MonoBehaviour
         InputManager.CrouchInputEvent -= SetCrouchInput;
 
         InputManager.SprintInputEvent -= SetSprintInput;
+
+        InputManager.ESCInputEvent -= SetESCInput;
     }
 }

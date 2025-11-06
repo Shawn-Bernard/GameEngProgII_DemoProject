@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UIElements;
 
 public class MainMenuController : MonoBehaviour
@@ -16,15 +18,6 @@ public class MainMenuController : MonoBehaviour
     private Button startButton;
     private Button optionButton;
     private Button quitButton;
-
-    private Button[] menubuttons;
-    private int focusedIndex = 0;
-
-    #region Setup button references and listeners
-
-
-
-    #endregion
 
     private void OnEnable()
     {
@@ -46,8 +39,8 @@ public class MainMenuController : MonoBehaviour
 
     private void PlayButton()
     {
-        //levelManager.LoadScene("Level_1");
-        Debug.Log("Play button was pressed");
+        gameManager.GameStateManager.SwitchStates(new GameplayState());
+        gameManager.LevelManager.LoadSceneWithSpawnPoint("Level1", "SpawnPoint");
     }
 
     private void OptionButton()
@@ -56,6 +49,6 @@ public class MainMenuController : MonoBehaviour
     }
     private void QuitButton()
     {
-        Debug.Log("quit button was pressed");
+        Application.Quit();
     }
 }

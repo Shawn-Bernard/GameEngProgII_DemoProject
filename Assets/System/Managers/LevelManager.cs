@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,6 +6,10 @@ public class LevelManager : MonoBehaviour
 {
 
     private string spawnPointName;
+
+    private GameStateManager gameStateManager = GameManager.instance.GameStateManager;
+
+    private UIManager uiManager = GameManager.instance.UIManager;
 
     public void LoadSceneWithSpawnPoint(string sceneName, string triggerSpawnPoint)
     {
@@ -41,11 +46,31 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    IEnumerable LoadSceneAsync(int sceneID)
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        gameStateManager.SwitchStates(LoadingState.Instance);
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneID);
+
+        while (asyncLoad.isDone == false)
+        {
+            float progressValue = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+
+            uiManager.loadingController.UpdateProgessBar(progressValue);
+            yield return null;
+        }
+    }
+
 
     private void SetPlayerSpawnPoint(string spawnPointName)
     {
         //Finding my spawn point from the trigger spawn point
         GameObject spawnPoint = GameObject.Find(spawnPointName);
+
+        Transform targetSpawnPoint = FindAnyObjectByType<PlayerSpawnPoint>().transform;
+
 
         //Finding my player object
         GameObject player = GameObject.FindGameObjectWithTag("Player");

@@ -34,6 +34,7 @@ public class InputManager : MonoBehaviour,Inputs.IPlayerActions
     public event Action<InputAction.CallbackContext> SprintInputEvent;
     public event Action<InputAction.CallbackContext> CrouchInputEvent;
     public event Action<InputAction.CallbackContext> InteractInputEvent;
+    public event Action<InputAction.CallbackContext> ESCInputEvent;
 
     #endregion
 
