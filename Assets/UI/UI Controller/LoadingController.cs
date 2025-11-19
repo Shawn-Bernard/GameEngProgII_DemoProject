@@ -23,11 +23,13 @@ public class LoadingController : MonoBehaviour
 
     }
 
-    public void UpdateProgessBar(float progess)
+    public void UpdateProgressBar(float progress)
     {
-        progressBar.value = progess;
+        // progress bar is a value between 0 and 1
+        progressBar.value = progress;
 
-        progressBar.title = $"{(int)progess * 100}%";
+        // Shows 0-100% (just the integer part)
+        progressBar.title = $"{(int)(progress * 100)}%";
     }
 }
 

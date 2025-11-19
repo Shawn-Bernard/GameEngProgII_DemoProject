@@ -21,8 +21,9 @@ public class BootLoadState : IState
         if (SceneManager.sceneCount == 1 && SceneManager.GetActiveScene().name == "BootLoader")
         {
             // Should add a method that just loads menu
-            GameManager.instance.LevelManager.LoadScene("MainMenu");
             gameManager.GameStateManager.SwitchStates(MainMenuState.Instance);
+            SceneManager.LoadScene("MainMenu");
+            //GameManager.instance.LevelManager.LoadScene("MainMenu");            
             return;
         }
         else if (SceneManager.sceneCount > 1 && SceneManager.GetActiveScene().name == "MainMenu")

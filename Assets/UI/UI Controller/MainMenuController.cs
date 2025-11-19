@@ -40,7 +40,7 @@ public class MainMenuController : MonoBehaviour
     private void PlayButton()
     {
         gameManager.GameStateManager.SwitchStates(new GameplayState());
-        gameManager.LevelManager.LoadSceneWithSpawnPoint("Level1", "SpawnPoint");
+        gameManager.LevelManager.LoadScene("Level1");
     }
 
     private void OptionButton()

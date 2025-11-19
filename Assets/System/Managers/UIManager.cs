@@ -5,7 +5,7 @@ public class UIManager : MonoBehaviour
     [Header("UI Menu Objects")]
     [SerializeField] private UIDocument mainMenuUI;
     [SerializeField] private UIDocument gameplayMenuUI;
-    [SerializeField] private UIDocument pauseMenuUI;'
+    [SerializeField] private UIDocument pauseMenuUI;
     [SerializeField] private UIDocument loadingMenuUI;
     //[SerializeField] private UIDocument gameOverMenuUI;
 
@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
         mainMenuUI = FindUIDocument("MainMenu");
         gameplayMenuUI = FindUIDocument("GameplayMenu");
         pauseMenuUI = FindUIDocument("PauseMenu");
+        loadingMenuUI = FindUIDocument("LoadingMenu");
         loadingController = FindAnyObjectByType<LoadingController>();
         DisableAllMenus();
     }
@@ -24,6 +25,7 @@ public class UIManager : MonoBehaviour
         mainMenuUI.rootVisualElement.style.display = DisplayStyle.None;
         pauseMenuUI.rootVisualElement.style.display = DisplayStyle.None;
         gameplayMenuUI.rootVisualElement.style.display = DisplayStyle.None;
+        loadingMenuUI.rootVisualElement.style.display = DisplayStyle.None;
         //gameOverMenuUI.rootVisualElement.style.display = DisplayStyle.None;
     }
 
@@ -49,6 +51,11 @@ public class UIManager : MonoBehaviour
     {
         DisableAllMenus();
         //gameOverMenuUI.rootVisualElement.style.display = DisplayStyle.Flex;
+    }
+    public void EnableLoadingMenu()
+    {
+        DisableAllMenus();
+        loadingMenuUI.rootVisualElement.style.display = DisplayStyle.Flex;
     }
 
     private UIDocument FindUIDocument(string name)

@@ -11,12 +11,15 @@ public class LoadingState : IState
 
     public static LoadingState Instance = instance;
 
+
     #endregion
     public void EnterState()
     {
         Cursor.visible = false;
 
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
+
+        gameManager.UIManager.EnableLoadingMenu();
 
     }
 

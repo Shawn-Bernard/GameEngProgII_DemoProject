@@ -53,6 +53,11 @@ public class GameStateManager : MonoBehaviour
 
         currentState?.ExitState();
 
+        if (lastState == mainMenuState && newState == gameplayState)
+        {
+
+        }
+
 
         currentState = newState;
         currentActiveState = currentState.ToString();
